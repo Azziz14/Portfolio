@@ -125,9 +125,23 @@ export default function ScrollyCanvas() {
 
     render(0);
 
+    let lastRenderedFrame = -1;
+    let frameRequestId: number | null = null;
+
     const unsubscribe = smoothProgress.on("change", (latest) => {
       const frameIndex = Math.max(0, Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT)));
-      requestAnimationFrame(() => render(frameIndex));
+      
+      if (frameIndex === lastRenderedFrame) return;
+
+      if (frameRequestId !== null) {
+        cancelAnimationFrame(frameRequestId);
+      }
+
+      frameRequestId = requestAnimationFrame(() => {
+        render(frameIndex);
+        lastRenderedFrame = frameIndex;
+        frameRequestId = null;
+      });
     });
 
     const handleResize = () => {
@@ -139,11 +153,15 @@ export default function ScrollyCanvas() {
       const latest = smoothProgress.get();
       const frameIndex = Math.max(0, Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT)));
       render(frameIndex);
+      lastRenderedFrame = frameIndex;
     };
     window.addEventListener("resize", handleResize);
 
     return () => {
       unsubscribe();
+      if (frameRequestId !== null) {
+        cancelAnimationFrame(frameRequestId);
+      }
       window.removeEventListener("resize", handleResize);
     };
   }, [loaded, images, smoothProgress, isMobile]);
