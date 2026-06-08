@@ -40,7 +40,17 @@ export default function ScrollyCanvas() {
   // Preload images
   useEffect(() => {
     if (isMobile === null) return;
-    if (isMobile) return;
+    
+    if (isMobile) {
+      // Set loaded to true immediately on mobile so scroll is never blocked
+      setLoaded(true);
+      const img = new Image();
+      img.src = currentFrame(0);
+      img.onload = () => {
+        setImages([img]);
+      };
+      return;
+    }
 
     const loadedImages: HTMLImageElement[] = [];
     let loadedCount = 0;
@@ -90,11 +100,23 @@ export default function ScrollyCanvas() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      const img = images[frameIndex];
+      let img = isMobile ? images[0] : images[frameIndex];
+      // Fallback if image failed to load or is not present
+      if (!img || !img.complete || img.naturalWidth === 0) {
+        for (let offset = 1; offset < FRAME_COUNT; offset++) {
+          const prev = images[frameIndex - offset];
+          if (prev && prev.complete && prev.naturalWidth > 0) {
+            img = prev;
+            break;
+          }
+          const next = images[frameIndex + offset];
+          if (next && next.complete && next.naturalWidth > 0) {
+            img = next;
+            break;
+          }
+        }
+      }
       if (!img) return;
-
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
 
       const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
       const x = (canvas.width / 2) - (img.width / 2) * scale;
@@ -104,22 +126,31 @@ export default function ScrollyCanvas() {
       ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
     };
 
+    // Initialize dimensions once on mount/load instead of doing it every frame
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
     render(0);
 
     const unsubscribe = smoothProgress.on("change", (latest) => {
-      const frameIndex = Math.min(
-        FRAME_COUNT - 1,
-        Math.floor(latest * FRAME_COUNT)
-      );
+      const frameIndex = isMobile
+        ? 0
+        : Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT));
       requestAnimationFrame(() => render(frameIndex));
     });
 
     const handleResize = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
       const latest = smoothProgress.get();
-      const frameIndex = Math.min(
-        FRAME_COUNT - 1,
-        Math.floor(latest * FRAME_COUNT)
-      );
+      const frameIndex = isMobile
+        ? 0
+        : Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT));
       render(frameIndex);
     };
     window.addEventListener("resize", handleResize);
@@ -128,14 +159,14 @@ export default function ScrollyCanvas() {
       unsubscribe();
       window.removeEventListener("resize", handleResize);
     };
-  }, [loaded, images, smoothProgress]);
+  }, [loaded, images, smoothProgress, isMobile]);
 
   return (
     <>
       <AnimatePresence>
         {!loaded && isMobile === false && <Preloader progress={progress} />}
       </AnimatePresence>
-      <div ref={containerRef} className="relative min-h-[100dvh] md:h-[500vh] bg-[#121212]">
+      <div ref={containerRef} className="relative h-[300vh] md:h-[500vh] bg-[#121212]">
         <div className="sticky top-0 h-[100dvh] md:h-screen w-full overflow-hidden">
           <canvas ref={canvasRef} className="block w-full h-full opacity-80 md:opacity-100" />
           <Overlay scrollYProgress={smoothProgress} isMobile={isMobile ?? false} />
