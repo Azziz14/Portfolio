@@ -129,8 +129,9 @@ export default function ScrollyCanvas() {
     // Initialize dimensions once on mount/load instead of doing it every frame
     const canvas = canvasRef.current;
     if (canvas) {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
     }
 
     render(0);
@@ -145,8 +146,9 @@ export default function ScrollyCanvas() {
     const handleResize = () => {
       const canvas = canvasRef.current;
       if (!canvas) return;
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
       const latest = smoothProgress.get();
       const frameIndex = isMobile
         ? 0
