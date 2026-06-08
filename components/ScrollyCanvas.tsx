@@ -166,12 +166,15 @@ export default function ScrollyCanvas() {
       <AnimatePresence>
         {!loaded && isMobile === false && <Preloader progress={progress} />}
       </AnimatePresence>
-      <div ref={containerRef} className="relative h-[300vh] md:h-[500vh] bg-[#121212]">
-        <div className="sticky top-0 h-[100dvh] md:h-screen w-full overflow-hidden">
-          <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block opacity-80 md:opacity-100" />
-          <Overlay scrollYProgress={smoothProgress} isMobile={isMobile ?? false} />
-        </div>
+      
+      {/* Fixed viewport container for Canvas and Overlay text (always centered and responsive) */}
+      <div className="fixed inset-0 h-[100dvh] w-full overflow-hidden pointer-events-none z-10">
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block opacity-80 md:opacity-100" />
+        <Overlay scrollYProgress={smoothProgress} isMobile={isMobile ?? false} />
       </div>
+
+      {/* Invisible scroll track to capture scrolling and drive the animation */}
+      <div ref={containerRef} className="relative h-[300vh] md:h-[500vh] pointer-events-none" />
     </>
   );
 }
