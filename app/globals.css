@@ -27,3 +27,28 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Cross-browser text gradient utilities */
+.text-gradient-1 {
+  background: linear-gradient(to right, #ff007f, #00f3ff, #9d00ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.text-gradient-2 {
+  background: linear-gradient(to right, #39ff14, #00f3ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.text-gradient-3 {
+  background: linear-gradient(to right, #9d00ff, #ff5f00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}

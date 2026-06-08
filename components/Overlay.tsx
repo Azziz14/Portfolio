@@ -29,7 +29,7 @@ export default function Overlay({ scrollYProgress, isMobile = false }: OverlayPr
         className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex flex-col items-center text-center px-4"
       >
         <h1
-          className="text-4xl sm:text-5xl md:text-9xl font-black tracking-tighter mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[#ff007f] via-[#00f3ff] to-[#9d00ff] select-none leading-none"
+          className="text-4xl sm:text-5xl md:text-9xl font-black tracking-tighter mb-2 text-gradient-1 select-none leading-none"
         >
           Ashish Gupta
         </h1>
@@ -47,7 +47,7 @@ export default function Overlay({ scrollYProgress, isMobile = false }: OverlayPr
         className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex flex-col items-start px-5 sm:px-8 md:px-32"
       >
         <h2
-          className="text-3xl sm:text-4xl md:text-8xl font-black tracking-tight max-w-4xl leading-none text-transparent bg-clip-text bg-gradient-to-r from-[#39ff14] to-[#00f3ff] select-none"
+          className="text-3xl sm:text-4xl md:text-8xl font-black tracking-tight max-w-4xl leading-none text-gradient-2 select-none"
         >
           Building <br />
           <span className="font-extrabold text-white">scalable</span> <br />
@@ -61,7 +61,7 @@ export default function Overlay({ scrollYProgress, isMobile = false }: OverlayPr
         className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex flex-col items-end text-right px-5 sm:px-8 md:px-32"
       >
         <h2
-          className="text-3xl sm:text-4xl md:text-8xl font-black tracking-tight max-w-4xl text-right leading-none text-transparent bg-clip-text bg-gradient-to-r from-[#9d00ff] to-[#ff5f00] select-none"
+          className="text-3xl sm:text-4xl md:text-8xl font-black tracking-tight max-w-4xl text-right leading-none text-gradient-3 select-none"
         >
           Bridging <br />
           <span className="font-extrabold text-white">machine learning</span> <br />
