@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useScroll, useSpring, AnimatePresence } from "framer-motion";
+import { useScroll, AnimatePresence } from "framer-motion";
 import Overlay from "./Overlay";
 import Preloader from "./Preloader";
 
-const FRAME_COUNT = 105;
+const FRAME_COUNT = 53;
 
-const currentFrame = (index: number) =>
-  `/sequence/frame_${index.toString().padStart(3, "0")}_delay-0.067s.png`;
+const currentFrame = (index: number) => {
+  const originalIndex = Math.min(104, index * 2);
+  return `/sequence/frame_${originalIndex.toString().padStart(3, "0")}_delay-0.067s.png`;
+};
 
 export default function ScrollyCanvas() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -21,12 +23,6 @@ export default function ScrollyCanvas() {
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
   });
 
   useEffect(() => {
@@ -128,7 +124,7 @@ export default function ScrollyCanvas() {
     let lastRenderedFrame = -1;
     let frameRequestId: number | null = null;
 
-    const unsubscribe = smoothProgress.on("change", (latest) => {
+    const unsubscribe = scrollYProgress.on("change", (latest) => {
       const frameIndex = Math.max(0, Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT)));
       
       if (frameIndex === lastRenderedFrame) return;
@@ -150,7 +146,7 @@ export default function ScrollyCanvas() {
       const dpr = window.devicePixelRatio || 1;
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
-      const latest = smoothProgress.get();
+      const latest = scrollYProgress.get();
       const frameIndex = Math.max(0, Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT)));
       render(frameIndex);
       lastRenderedFrame = frameIndex;
@@ -164,7 +160,7 @@ export default function ScrollyCanvas() {
       }
       window.removeEventListener("resize", handleResize);
     };
-  }, [loaded, images, smoothProgress, isMobile]);
+  }, [loaded, images, scrollYProgress, isMobile]);
 
   return (
     <>
@@ -175,7 +171,7 @@ export default function ScrollyCanvas() {
       {/* Fixed viewport container for Canvas and Overlay text (always centered and responsive) */}
       <div className="fixed inset-0 h-[100dvh] w-full overflow-hidden pointer-events-none z-10">
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block opacity-80 md:opacity-100" />
-        <Overlay scrollYProgress={smoothProgress} isMobile={isMobile ?? false} />
+        <Overlay scrollYProgress={scrollYProgress} isMobile={isMobile ?? false} />
       </div>
 
       {/* Invisible scroll track to capture scrolling and drive the animation */}
