@@ -1,12 +1,24 @@
 "use client";
 
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, animate } from "framer-motion";
 
 interface PreloaderProps {
   progress: number;
 }
 
 export default function Preloader({ progress }: PreloaderProps) {
+  const [displayProgress, setDisplayProgress] = useState(0);
+
+  useEffect(() => {
+    const controls = animate(displayProgress, progress, {
+      duration: 0.35,
+      ease: "easeOut",
+      onUpdate: (latest) => setDisplayProgress(Math.round(latest)),
+    });
+    return () => controls.stop();
+  }, [progress]);
+
   return (
     <motion.div
       initial={{ opacity: 1 }}
@@ -33,7 +45,7 @@ export default function Preloader({ progress }: PreloaderProps) {
             style={{ filter: "drop-shadow(0 0 8px rgba(255, 0, 127, 0.6))" }}
           />
           <div className="absolute inset-0 flex items-center justify-center text-sm font-black text-white/90">
-            {progress}%
+            {displayProgress}%
           </div>
         </div>
 
@@ -50,7 +62,7 @@ export default function Preloader({ progress }: PreloaderProps) {
           {/* Inner animated progress bar */}
           <motion.div
             className="h-full bg-gradient-to-r from-[#ff007f] via-[#00f3ff] to-[#9d00ff]"
-            style={{ width: `${progress}%` }}
+            style={{ width: `${displayProgress}%` }}
             transition={{ type: "spring", stiffness: 80, damping: 15 }}
           />
         </div>
@@ -58,7 +70,7 @@ export default function Preloader({ progress }: PreloaderProps) {
         {/* Loading details */}
         <div className="w-full mt-3 flex justify-between text-[9px] font-bold text-white/30 uppercase tracking-widest">
           <span>Loading assets</span>
-          <span>{progress} / 100</span>
+          <span>{displayProgress} / 100</span>
         </div>
       </div>
     </motion.div>

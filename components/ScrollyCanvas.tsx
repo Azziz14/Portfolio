@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useScroll, AnimatePresence } from "framer-motion";
+import { useScroll, useSpring, AnimatePresence } from "framer-motion";
 import Overlay from "./Overlay";
 import Preloader from "./Preloader";
 
@@ -23,6 +23,12 @@ export default function ScrollyCanvas() {
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 85,
+    damping: 24,
+    restDelta: 0.001
   });
 
   useEffect(() => {
@@ -124,7 +130,7 @@ export default function ScrollyCanvas() {
     let lastRenderedFrame = -1;
     let frameRequestId: number | null = null;
 
-    const unsubscribe = scrollYProgress.on("change", (latest) => {
+    const unsubscribe = smoothProgress.on("change", (latest) => {
       const frameIndex = Math.max(0, Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT)));
       
       if (frameIndex === lastRenderedFrame) return;
@@ -146,7 +152,7 @@ export default function ScrollyCanvas() {
       const dpr = window.devicePixelRatio || 1;
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
-      const latest = scrollYProgress.get();
+      const latest = smoothProgress.get();
       const frameIndex = Math.max(0, Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT)));
       render(frameIndex);
       lastRenderedFrame = frameIndex;
@@ -160,7 +166,7 @@ export default function ScrollyCanvas() {
       }
       window.removeEventListener("resize", handleResize);
     };
-  }, [loaded, images, scrollYProgress, isMobile]);
+  }, [loaded, images, smoothProgress, isMobile]);
 
   return (
     <>
@@ -171,11 +177,11 @@ export default function ScrollyCanvas() {
       {/* Fixed viewport container for Canvas and Overlay text (always centered and responsive) */}
       <div className="fixed inset-0 h-[100dvh] w-full overflow-hidden pointer-events-none z-10">
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block opacity-80 md:opacity-100" />
-        <Overlay scrollYProgress={scrollYProgress} isMobile={isMobile ?? false} />
+        <Overlay scrollYProgress={smoothProgress} isMobile={isMobile ?? false} />
       </div>
 
       {/* Invisible scroll track to capture scrolling and drive the animation */}
-      <div ref={containerRef} className="relative h-[300vh] md:h-[500vh] pointer-events-none" />
+      <div ref={containerRef} className="relative h-[150vh] md:h-[220vh] pointer-events-none" />
     </>
   );
 }
