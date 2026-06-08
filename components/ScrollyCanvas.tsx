@@ -40,17 +40,6 @@ export default function ScrollyCanvas() {
   // Preload images
   useEffect(() => {
     if (isMobile === null) return;
-    
-    if (isMobile) {
-      // Set loaded to true immediately on mobile so scroll is never blocked
-      setLoaded(true);
-      const img = new Image();
-      img.src = currentFrame(0);
-      img.onload = () => {
-        setImages([img]);
-      };
-      return;
-    }
 
     const loadedImages: HTMLImageElement[] = [];
     let loadedCount = 0;
@@ -100,7 +89,7 @@ export default function ScrollyCanvas() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      let img = isMobile ? images[0] : images[frameIndex];
+      let img = images[frameIndex];
       // Fallback if image failed to load or is not present
       if (!img || !img.complete || img.naturalWidth === 0) {
         for (let offset = 1; offset < FRAME_COUNT; offset++) {
@@ -137,9 +126,7 @@ export default function ScrollyCanvas() {
     render(0);
 
     const unsubscribe = smoothProgress.on("change", (latest) => {
-      const frameIndex = isMobile
-        ? 0
-        : Math.max(0, Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT)));
+      const frameIndex = Math.max(0, Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT)));
       requestAnimationFrame(() => render(frameIndex));
     });
 
@@ -150,9 +137,7 @@ export default function ScrollyCanvas() {
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       const latest = smoothProgress.get();
-      const frameIndex = isMobile
-        ? 0
-        : Math.max(0, Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT)));
+      const frameIndex = Math.max(0, Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT)));
       render(frameIndex);
     };
     window.addEventListener("resize", handleResize);
@@ -166,7 +151,7 @@ export default function ScrollyCanvas() {
   return (
     <>
       <AnimatePresence>
-        {!loaded && isMobile === false && <Preloader progress={progress} />}
+        {!loaded && <Preloader progress={progress} />}
       </AnimatePresence>
       
       {/* Fixed viewport container for Canvas and Overlay text (always centered and responsive) */}
