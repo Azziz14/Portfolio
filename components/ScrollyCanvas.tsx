@@ -168,7 +168,7 @@ export default function ScrollyCanvas() {
       </AnimatePresence>
       <div ref={containerRef} className="relative h-[300vh] md:h-[500vh] bg-[#121212]">
         <div className="sticky top-0 h-[100dvh] md:h-screen w-full overflow-hidden">
-          <canvas ref={canvasRef} className="block w-full h-full opacity-80 md:opacity-100" />
+          <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block opacity-80 md:opacity-100" />
           <Overlay scrollYProgress={smoothProgress} isMobile={isMobile ?? false} />
         </div>
       </div>

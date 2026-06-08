@@ -30,10 +30,6 @@ export default function Overlay({ scrollYProgress, isMobile = false }: OverlayPr
       >
         <h1
           className="text-4xl sm:text-5xl md:text-9xl font-black tracking-tighter mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[#ff007f] via-[#00f3ff] to-[#9d00ff] select-none leading-none"
-          style={{
-            textShadow:
-              "0 0 30px rgba(255,0,127,0.55), 0 0 40px rgba(0,243,255,0.3), 0 0 70px rgba(157,0,255,0.25)",
-          }}
         >
           Ashish Gupta
         </h1>
@@ -52,7 +48,6 @@ export default function Overlay({ scrollYProgress, isMobile = false }: OverlayPr
       >
         <h2
           className="text-3xl sm:text-4xl md:text-8xl font-black tracking-tight max-w-4xl leading-none text-transparent bg-clip-text bg-gradient-to-r from-[#39ff14] to-[#00f3ff] select-none"
-          style={{ textShadow: "0 0 35px rgba(57,255,20,0.25), 0 0 50px rgba(0,243,255,0.18)" }}
         >
           Building <br />
           <span className="font-extrabold text-white">scalable</span> <br />
@@ -67,7 +62,6 @@ export default function Overlay({ scrollYProgress, isMobile = false }: OverlayPr
       >
         <h2
           className="text-3xl sm:text-4xl md:text-8xl font-black tracking-tight max-w-4xl text-right leading-none text-transparent bg-clip-text bg-gradient-to-r from-[#9d00ff] to-[#ff5f00] select-none"
-          style={{ textShadow: "0 0 35px rgba(157,0,255,0.22), 0 0 60px rgba(255,95,0,0.18)" }}
         >
           Bridging <br />
           <span className="font-extrabold text-white">machine learning</span> <br />
