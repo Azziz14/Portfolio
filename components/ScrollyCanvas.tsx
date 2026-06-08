@@ -118,12 +118,12 @@ export default function ScrollyCanvas() {
       }
       if (!img) return;
 
-      const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
-      const x = (canvas.width / 2) - (img.width / 2) * scale;
-      const y = (canvas.height / 2) - (img.height / 2) * scale;
+      const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+      const x = (canvas.width / 2) - (img.naturalWidth / 2) * scale;
+      const y = (canvas.height / 2) - (img.naturalHeight / 2) * scale;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+      ctx.drawImage(img, x, y, img.naturalWidth * scale, img.naturalHeight * scale);
     };
 
     // Initialize dimensions once on mount/load instead of doing it every frame
@@ -138,7 +138,7 @@ export default function ScrollyCanvas() {
     const unsubscribe = smoothProgress.on("change", (latest) => {
       const frameIndex = isMobile
         ? 0
-        : Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT));
+        : Math.max(0, Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT)));
       requestAnimationFrame(() => render(frameIndex));
     });
 
@@ -150,7 +150,7 @@ export default function ScrollyCanvas() {
       const latest = smoothProgress.get();
       const frameIndex = isMobile
         ? 0
-        : Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT));
+        : Math.max(0, Math.min(FRAME_COUNT - 1, Math.floor(latest * FRAME_COUNT)));
       render(frameIndex);
     };
     window.addEventListener("resize", handleResize);

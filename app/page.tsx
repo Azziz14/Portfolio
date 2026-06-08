@@ -7,7 +7,7 @@ import ParticleNet from "@/components/ParticleNet";
 
 export default function Home() {
   return (
-    <main className="bg-[#121212] min-h-[100dvh] font-sans selection:bg-white/30 relative overflow-x-hidden">
+    <main className="bg-[#121212] min-h-[100dvh] font-sans selection:bg-white/30 relative">
       <CursorGlow />
       <ScrollProgress />
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
