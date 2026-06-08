@@ -30,7 +30,7 @@ export default function ScrollyCanvas() {
   });
 
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 768px)");
+    const mq = window.matchMedia("(max-width: 1024px)");
     const update = () => setIsMobile(mq.matches);
     update();
     mq.addEventListener("change", update);
