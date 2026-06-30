@@ -1,7 +1,14 @@
 {
-  "name": "portfolio-app",
-  "version": "0.1.0",
+  "name": "ashishgupta-portfolio",
+  "version": "1.0.0",
   "private": true,
+  "description": "Personal portfolio of Ashish Gupta — IT undergraduate at CBIT, building scalable distributed systems, LLM-powered tools, and real-time trading engines.",
+  "author": "Ashish Gupta <ashishgupta@example.com>",
+  "homepage": "https://github.com/Azziz14/Portfolio",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Azziz14/Portfolio.git"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

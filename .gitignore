@@ -24,6 +24,11 @@
 .DS_Store
 *.pem
 
+# AI agent config (internal — never commit)
+AGENTS.md
+CLAUDE.md
+task.md
+
 # archives & large binary assets (never commit these)
 *.zip
 *.tar
